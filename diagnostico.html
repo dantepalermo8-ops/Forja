@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico FORJA</title>
+<style>
+body{background:#0E0F11;color:#F2F1ED;font-family:system-ui,sans-serif;padding:18px;line-height:1.5;}
+h1{font-size:18px;}
+.box{background:#1C1E22;border:1px solid #2A2C31;border-radius:12px;padding:14px;margin-bottom:14px;}
+.key{font-weight:700;color:#FF4F32;}
+.size{color:#9A9DA6;font-size:13px;}
+textarea{width:100%;height:100px;background:#0E0F11;color:#F2F1ED;border:1px solid #2A2C31;border-radius:8px;padding:8px;font-size:11px;margin-top:6px;}
+.empty{color:#FF5C5C;font-weight:700;}
+.ok{color:#3DDC84;font-weight:700;}
+</style>
+</head>
+<body>
+<h1>Diagnóstico de datos guardados</h1>
+<div id="out">Revisando...</div>
+<script>
+const keys=['routines','history','records','profile','customExercises','session'];
+let html='';
+let anyFound=false;
+keys.forEach(k=>{
+  const full='forja:'+k;
+  const val=localStorage.getItem(full);
+  if(val){
+    anyFound=true;
+    html+=`<div class="box"><div class="key">${full}</div><div class="size ok">Encontrado — ${val.length} caracteres</div><textarea readonly>${val.replace(/</g,'&lt;')}</textarea></div>`;
+  } else {
+    html+=`<div class="box"><div class="key">${full}</div><div class="size empty">No encontrado (vacío)</div></div>`;
+  }
+});
+html = `<div class="box"><b>Resultado general: </b><span class="${anyFound?'ok':'empty'}">${anyFound?'Sí hay datos guardados en este navegador.':'No hay datos guardados en este navegador para esta app.'}</span></div>` + html;
+html += `<div class="box"><b>Todas las claves guardadas en este sitio (localStorage completo):</b><br><span style="font-size:12px;">${Object.keys(localStorage).join(', ') || '(ninguna)'}</span></div>`;
+document.getElementById('out').innerHTML=html;
+</script>
+</body>
+</html>
